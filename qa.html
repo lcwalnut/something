@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>年终奖大作站</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="asset/css/style.css?v2" />
+</head>
+
+<body>
+    <!-- laod -->
+    <div id="rotate" style=""><img src="asset/image/rotate.jpg"></div>
+    <script type="text/javascript">
+    var _rotate = document.getElementById("rotate");
+    // 横竖屏幕判断
+    function orientationChange() {
+        if (window.orientation == 90 || window.orientation == -90) {
+            _rotate.style.display = "block";
+        } else {
+            _rotate.style.display = "none";
+        }
+    }
+    orientationChange();
+    window.onresize = orientationChange;
+    </script>
+    <div class="loadinglogo">
+        <img class="animated infinite floatingDownLight" src="asset/image/loading.png">
+        <div class="loader-inner line-scale-pulse-out-rapid">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <!-- laod end -->
+    <!-- music -->
+    <audio id="audio" loop="loop" autoplay="autoplay">
+        <source src="asset/media/bg2.mp3" type="audio/mp3">
+    </audio>
+    <!-- music end -->
+    <!-- opr -->
+    <ul class="opr animated fadeInDown">
+        <li>
+            <!-- 返回个人中心 -->
+            <a href="index.html"><img src="asset/image/btn-home.png"></a>
+        </li>
+        <li>
+            <!-- 教程 -->
+            <a class="btn-teach" href="javascript:;"><img src="asset/image/btn-course.png"></a>
+        </li>
+        <li>
+            <!-- 关闭/打开音乐 -->
+            <a class="btn-music" href="javascript:;">
+                <img src="asset/image/btn-music.png" alt="">
+            </a>
+        </li>
+    </ul>
+    <!-- opr end -->
+    <!-- page = start -->
+    <div class="page pageStart u-bg">
+        <div class="img-des1 u-ani animated fadeInUp"></div>
+        <div class="img-des2 u-ani animated zoomIn"></div>
+        <div class="img-des3 u-ani animated zoomIn"></div>
+        <div class="img-car u-ani  animated fadeInLeft"></div>
+        <a class="btn-start u-ani" href="javascript:;"></a>
+    </div>
+    <!-- page = start end -->
+    <!-- page = share -->
+    <div class="page pageShare animated">
+        <img src="asset/image/img-share.png" alt="">
+        <div class="bg"></div>
+    </div>
+    <!-- page = share end -->
+    <!-- page = result -->
+    <div class="page pageResult u-bg">
+        <div class="img-des1 u-ani animated fadeInUp"></div>
+        <div class="img-des2 u-ani animated fadeInUp"></div>
+        <div class="img-des4 u-ani animated fadeInUp">
+            <p class="score animated fadeInUp">恭喜你获得<code></code>分</p>
+        </div>
+        <div class="img-car u-ani"></div>
+        <!-- 分享按钮 -->
+        <a class="btn-share u-ani  animated fadeInUp" href="javascript:;"></a>
+        <!-- 再玩一次 -->
+        <a class="btn-replay u-ani  animated fadeInUp" href="javascript:;"></a>
+    </div>
+    <!-- page = result end -->
+    <!-- page = tutorial -->
+    <div class="page pageTutorial u-bg animated">
+        <div class="m-teach">
+            <div class="m-point btn-close">
+                <img src="asset/image/btn-close.png" alt="">
+            </div>
+            <img src="asset/image/img-tech.png" width="80%">
+        </div>
+    </div>
+    <!-- page = tutorial end -->
+    <!-- page = tutorial -->
+    <div class="page pageGame u-bg">
+        <div class="tutorial">
+            <div class="m-teach">
+                <div class="m-point btn-gamestart">
+                    <img src="asset/image/btn-start2.png" alt="">
+                </div>
+                <img src="asset/image/img-tech.png" width="80%">
+            </div>
+        </div>
+        <div class="gameBox">
+            <!-- 用户信息 -->
+            <div class="info m-paperinfo">
+                <div class="img">
+                    <img src="asset/demo/160x160.jpg" alt="用户姓名">
+                </div>
+            </div>
+            <!-- 计时器 -->
+            <div class="timer m-paperinfo">
+                <div class="img">
+                    <code class="time">10</code>
+                </div>
+            </div>
+            <div class="scoreBar">
+                <div class="line"></div>
+                <code class="text">0</code>
+            </div>
+            <ul class="questionList"></ul>
+        </div>
+    </div>
+    <!-- page = tutorial end -->
+    <!-- 分数 value  ;  date-times  答题次数  -->
+    <input type="hidden" class="scoreValue" value="0" date-times="0">
+    <script type="text/javascript" src="asset/plugin/jquery.min.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="asset/plugin/preloadjs-0.4.1.min.js" charset="UTF-8"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript">
+    // 音乐自动播放
+    wx.ready(function() {
+        var au1 = document.getElementById('audio');
+        au1.src = "asset/media/bg2.mp3";
+        au1.play();
+        au1.loop = true;
+    })
+    wx.error(function(res) {
+        console.log(res.errMsg);
+    });
+
+    // 音乐控制
+    var playnow = true;
+    $(".btn-music").on("click", function() {
+        if (playnow) {
+            $(".btn-music img").attr("src", "asset/image/btn-musicoff.png");
+            // $(".btn-music img").removeClass("animated");
+            playnow = false;
+            var au1 = document.getElementById('audio');
+            au1.pause();
+        } else {
+            $(".btn-music img").attr("src", "asset/image/btn-music.png");
+            // $(".btn-music img").addClass("animated");
+            playnow = true;
+            var au1 = document.getElementById('audio');
+            au1.play();
+        }
+    });
+    </script>
+    <script type="text/javascript">
+    var usertimes = $(".scoreValue").attr("date-times");
+    // 预加载
+    var queue = new createjs.LoadQueue();
+    queue.installPlugin(createjs.Sound);
+    queue.on("complete", handleComplete, this);
+    queue.loadManifest([
+        { id: "img1", src: "asset/image/bg.jpg" }
+    ]);
+
+    function handleComplete() {
+        // var image = queue.getResult("img1");
+        // document.body.appendChild(image);
+        $(".loadinglogo").fadeOut();
+    }
+
+
+    // 点击重新游戏
+    $(".btn-replay,.btn-start").on("click", function() {
+        if (usertimes >= 2) {
+
+            alert("您今日已经进行了两次游戏！");
+
+        } else {
+
+            // 游戏初始化
+            gameInit();
+
+        }
+
+    });
+
+    // 开始游戏
+    $(".btn-gamestart").on("click", function() {
+
+        usertimes = $(".scoreValue").attr("date-times");
+
+        if (usertimes >= 2) {
+
+            alert("您今日已经进行了两次游戏！");
+
+        } else {
+
+            // 开始游戏
+            game();
+        }
+    });
+    
+    var timer = $(".time");
+    var scoreBar = $(".scoreBar");
+    var scoreBarH = $(".scoreBar").height();
+    var qa = {
+        // 题目的数量
+        count: 0,
+        // 每题的分值
+        cent: 10,
+        // 总分
+        score: 0,
+        // 计时器时间
+        timer: 10,
+        result: 0
+    };
+    // 游戏初始化
+    function gameInit() {
+        // 音乐初始化
+        var au1 = document.getElementById('audio');
+            au1.pause();
+        
+        // 样式初始化
+        $(".pageGame").show();
+        $(".tutorial").show();
+        $(".pageResult").fadeOut();
+        $(".pageStart").fadeOut();
+        $(".opr").fadeOut();
+        // 结果样式更新
+        qa.score = 0;
+        qa.result = 0;
+        console.log( qa.result  );
+        scoreBar.find(".text").html(0);
+        scoreBar.find(".line").height(0.05 * scoreBarH);
+
+        $(".scoreValue").val(0);
+        $(".score code").html(0);
+
+        // 题目初始化
+        $(".questionList").html("");
+        var _html = "";
+        $.getJSON("http://wx-csd.otam.com.cn/yiqidazhong/api.php?l=sitebook&c=answer_quzhi",function(data){
+          if(data.api_state ==1){
+              
+            $.each(data.arr,function(k,v){
+                //var num = parseInt(k)+1;
+                
+              _html+="<li class='m-paper'><h3 class='q'>"+v.question+"</h3><div class='a'>";
+              
+              if(v.answer1 ==v.answer){
+                  _html+="<a class='ok' href='javascript:;'>"+v.answer1+"</a>";
+              }else{
+                  _html+="<a href='javascript:;'>"+v.answer1+"</a>";
+              }
+              
+              if(v.answer2 ==v.answer){
+                  _html+="<a class='ok' href='javascript:;'>"+v.answer2+"</a>";
+              }else{
+                  _html+="<a href='javascript:;'>"+v.answer2+"</a>";
+              }
+              
+              if(v.answer3 ==v.answer){
+                  _html+="<a class='ok' href='javascript:;'>"+v.answer3+"</a>";
+              }else{
+                  _html+="<a href='javascript:;'>"+v.answer3+"</a>";
+              }
+
+              _html+="</div></li>";
+              
+              
+                
+            });
+            
+            
+            /*$(".questionList").html(_html);*/
+            $(".questionList").append( _html );
+              
+            $(".m-paper:eq(0)").addClass("act");
+            $(".m-paper").each(function(){
+                var _index = $(this).index() + 1;
+                $(this).find(".q").prepend( _index +"." );
+            });
+            qa.count = $(".m-paper").length;
+          }
+        });
+
+    }
+
+
+    // 开始游戏
+    function game() {
+
+        $(".tutorial").fadeOut();
+        
+        lastTime(10);
+        // 音乐初始化
+        var au1 = document.getElementById('audio');
+            au1.play();
+            au1.loop = true;
+        $(".opr").fadeIn();
+        
+    }
+    
+            // 答题分数计算；选中的答案 an-on；正确的的答案 an-ok；错误的的答案 an-error
+    $(document).on("touchstart", ".m-paper .a a", function() {
+
+        var _this = $(this),
+            _thisPar = $(this).parents(".m-paper"),
+            _thisParIndex = _thisPar.index();
+
+        // 阻止多次点击
+        _thisPar.addClass("clickoff");
+        clearTimeout(timeSet);
+        // 是否答对题目
+        if (_this.hasClass("ok")) {
+            // 结果更新
+            qa.result += 1;
+            console.log(  "click" + qa.result );
+            //总分
+            qa.score = qa.result * qa.cent;
+
+            // 结果样式更新
+            scoreBar.find(".text").html(qa.score);
+            scoreBar.find(".line").height(qa.result * scoreBarH / qa.count);
+
+            // 答案样式更新
+            _this.addClass("u-right");
+
+        } else {
+            // 答案样式更新
+            var anOk = $(this).siblings(".ok");
+            _this.addClass("u-wrong");
+            anOk.addClass("u-right");
+        }
+
+
+        // 翻页
+        setTimeout(function() {
+
+            _thisPar.removeClass("act");
+
+            if (_thisParIndex == qa.count - 1) {
+                // 显示答题结果\增加答题次数
+                getScore();
+            } else {
+                _thisPar.next().addClass("act animated fadeInUp");
+                lastTime(10);
+            }
+
+        }, 500);
+
+    });
+    
+    function lastTime(start) {
+
+        if (start < 0) {
+
+            start = 0;
+            timer.html(start);
+            clearTimeout(timeSet);
+
+            
+            var _this = $(".m-paper.act"),
+                _thisIndex = _this.index();
+
+            // 设置不可点击
+            _this.addClass("clickoff");
+            _this.find(".ok").addClass("u-right");
+            _this.find(".ok").siblings("a").addClass("u-wrong");
+
+            // 翻页
+            setTimeout(function() {
+                if ( _thisIndex == qa.count - 1) {
+                    // 显示答题结果\增加答题次数
+                    getScore();
+                    
+                } else {
+                    _this.next().addClass("act animated fadeInUp");
+                    _this.removeClass("act");
+                    lastTime(10);
+                }
+
+            }, 500);
+
+
+        } else {
+
+            timer.html(start);
+            start--;
+            timeSet = setTimeout(function() { lastTime(start) }, 1000);
+        }
+
+
+    }
+
+    // 显示答题结果
+    function getScore(){
+        console.log(qa.score);
+        $(".pageResult").fadeIn();
+        $(".score code").html(qa.score);
+        $(".scoreValue").val(qa.score);
+
+        usertimes ++;
+        $(".scoreValue").attr("date-times",usertimes);
+        
+    }
+
+
+   
+
+    // 点击显示教程
+    $(".btn-teach").on("click", function() {
+        $(".pageTutorial").fadeIn();
+    });
+
+    // 关闭教程
+    $(".btn-close").on("click", function() {
+        $(".pageTutorial").fadeOut();
+    });
+
+    // 点击显示分享
+    $(".btn-share").on("click", function() {
+        $(".pageShare").fadeIn();
+    });
+
+    // 关闭分享
+    $(".pageShare").on("click", function() {
+        $(".pageShare").fadeOut();
+    });
+    </script>
+</body>
+
+</html>
